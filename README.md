@@ -1,5 +1,7 @@
 # Complete Coclusion Cliff Simulator
 
+![Simulator Preview](images1.png)
+
 A Tkinter-based tool that fully simulates the Conclusion Cliff gameplay loop, helping hunters plan optimal strategies and visualize every resource change.
 
 ## Features
@@ -10,6 +12,19 @@ A Tkinter-based tool that fully simulates the Conclusion Cliff gameplay loop, he
 - One-click "10-Hunt" buttons to fast-forward hunts in chapters or Postscript.
 - Fancy UI: colored notoriety bars, pages pie chart, live status indicators.
 - Undo/Redo, action log, and optional button sound effects with volume control.
+
+### Downloads & Running
+- Grab the pre-built `.exe` from the Releases page on the right side of this GitHub repo.
+- When sharing the packaged version, copy the entire `dist/CCSimulator/` folder (not just the `.exe`). If you prefer a single-file build, run PyInstaller with `--onefile`.
+- Build or run it yourself:
+  ```bash
+  pip install pyinstaller
+  pyinstaller --name "CCSimulator" --noconsole --add-data "sounds;sounds" main.py
+  # or
+  pyinstaller --onefile --noconsole --add-data "sounds;sounds" main.py
+  ```
+  The resulting executable (inside `dist/CCSimulator/`) will include the sound files so SFX work out of the box.
+- Alternatively, just open the project in PyCharm (or any Python 3.10+ environment) and run `main.py` directly.
 
 ## Quick Start
 1. **Initial setup**
