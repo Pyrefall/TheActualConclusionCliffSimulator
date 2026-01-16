@@ -249,6 +249,8 @@ class GameState:
     postscript_extended: bool = False
     run_mallets_spent: int = 0
     total_mallets_spent: int = 0
+    total_diamonds_gain: float = 0.0
+    pending_choices_locked: bool = False
 
     def clone(self) -> "GameState":
         return GameState(
@@ -269,6 +271,8 @@ class GameState:
             postscript_extended=self.postscript_extended,
             run_mallets_spent=self.run_mallets_spent,
             total_mallets_spent=self.total_mallets_spent,
+            pending_choices_locked=self.pending_choices_locked,
+            total_diamonds_gain=self.total_diamonds_gain,
         )
 
     def to_dict(self) -> dict:
@@ -290,6 +294,8 @@ class GameState:
             "postscript_extended": self.postscript_extended,
             "run_mallets_spent": self.run_mallets_spent,
             "total_mallets_spent": self.total_mallets_spent,
+            "pending_choices_locked": self.pending_choices_locked,
+            "total_diamonds_gain": self.total_diamonds_gain,
         }
 
     @classmethod
@@ -320,6 +326,8 @@ class GameState:
         state.postscript_extended = bool(data.get("postscript_extended", False))
         state.run_mallets_spent = int(data.get("run_mallets_spent", 0))
         state.total_mallets_spent = int(data.get("total_mallets_spent", 0))
+        state.pending_choices_locked = bool(data.get("pending_choices_locked", False))
+        state.total_diamonds_gain = float(data.get("total_diamonds_gain", 0.0))
         return state
 
     def fantasy_unlocked(self) -> bool:
@@ -366,6 +374,7 @@ class SimulatorApp:
     def __init__(self, root: tk.Tk):
         self.root = root
         self.root.title("Complete Coclusion Cliff Simulator")
+        self.root.geometry("1500x895")
         self.history = HistoryManager(GameState())
         self.state = self.history.current
 
@@ -396,6 +405,7 @@ class SimulatorApp:
         self.pages_pie_canvas: tk.Canvas | None = None
         self.run_mallets_var = tk.StringVar(value="0")
         self.total_mallets_var = tk.StringVar(value="0")
+        self.hunts_per_diamond_var = tk.StringVar(value="N/A")
         self.sfx_enabled = tk.BooleanVar(value=True)
         self.sfx_volume = tk.DoubleVar(value=25.0)
 
@@ -439,6 +449,8 @@ class SimulatorApp:
         consumables_frame = ttk.LabelFrame(left_panel, text="Consumables (can go negative)")
         consumables_frame.grid(row=0, column=1, sticky="nsew")
         self._populate_entries(consumables_frame, self.consumable_vars, "consumables", allow_float=True)
+        cc_check = ttk.Checkbutton(consumables_frame, text="CC ON", variable=self.cc_enabled)
+        cc_check.grid(row=len(self.consumable_vars) + 1, column=0, sticky="w", pady=(10, 0))
 
         stats_frame = ttk.Frame(left_panel)
         stats_frame.grid(row=1, column=0, columnspan=2, sticky="nsew", pady=(10, 0))
@@ -639,6 +651,8 @@ class SimulatorApp:
         ttk.Label(info_frame, textvariable=self.run_mallets_var).grid(row=6, column=1, sticky="w")
         ttk.Label(info_frame, text="Total Mallets spent:").grid(row=7, column=0, sticky="w")
         ttk.Label(info_frame, textvariable=self.total_mallets_var).grid(row=7, column=1, sticky="w")
+        ttk.Label(info_frame, text="Total hunts / total Diamonds gain:").grid(row=8, column=0, sticky="w")
+        ttk.Label(info_frame, textvariable=self.hunts_per_diamond_var).grid(row=8, column=1, sticky="w")
 
         controls_frame = ttk.Frame(hunt_frame)
         controls_frame.grid(row=0, column=1, sticky="ne")
@@ -691,8 +705,6 @@ class SimulatorApp:
         self.pending_choices_container = ttk.Frame(self.pending_choices_frame)
         self.pending_choices_container.pack(fill="x", padx=5, pady=5)
         self.pending_choices_frame.grid_remove()
-        cc_check = ttk.Checkbutton(hunt_frame, text="CC ON", variable=self.cc_enabled)
-        cc_check.grid(row=3, column=0, sticky="w", pady=(10, 0))
         log_frame = ttk.LabelFrame(hunt_frame, text="Log")
         log_frame.grid(row=4, column=0, columnspan=2, sticky="nsew", pady=(10, 0))
         log_frame.columnconfigure(0, weight=1)
@@ -704,6 +716,9 @@ class SimulatorApp:
         scroll.grid(row=0, column=1, sticky="ns")
         self.log_text.tag_configure("info_postscript", foreground="#d9534f")
         self.log_text.tag_configure("info_run_complete", foreground="#5cb85c")
+        ttk.Button(log_frame, text="Export Log", command=self._export_log).grid(
+            row=1, column=0, columnspan=2, sticky="e", pady=(5, 0)
+        )
     def _get_var(self, category: str, key: str) -> tk.StringVar:
         mapping = {
             "resources": self.resource_vars,
@@ -777,6 +792,8 @@ class SimulatorApp:
             value = float(amount)
             if material not in {"Gold", "Diamond"}:
                 value *= multiplier
+            if material == "Diamond":
+                state.total_diamonds_gain += value
             self._apply_loot_amount(state, material, value)
             results.append((material, value))
         return results
@@ -988,6 +1005,12 @@ class SimulatorApp:
         self.run_hunts_var.set(str(self.state.current_run_hunts))
         self.run_mallets_var.set(str(self.state.run_mallets_spent))
         self.total_mallets_var.set(str(self.state.total_mallets_spent))
+        diamonds = self.state.total_diamonds_gain
+        if diamonds > 0:
+            ratio = self.state.total_hunts / diamonds if diamonds else 0
+            self.hunts_per_diamond_var.set(f"{ratio:.2f}")
+        else:
+            self.hunts_per_diamond_var.set("N/A")
         self.chapter_pos_var.set(str(self.state.chapter_position))
         if self.state.chapter_position == 7:
             length_display = str(self.state.postscript_length)
@@ -1026,9 +1049,14 @@ class SimulatorApp:
                 and not self.state.postscript_extended
             )
             self.extend_postscript_button.config(state="normal" if extend_state else "disabled")
+        selection_blocked = (
+            self.state.pending_chapter_choices
+            and not self.state.pending_choices_locked
+            and self.state.chapter_position <= TOTAL_CHAPTERS
+        )
         cheese_allowed = (
             (1 <= self.state.chapter_position <= TOTAL_CHAPTERS or self.state.chapter_position == 7)
-            and not self.state.pending_chapter_choices
+            and not selection_blocked
             and (target_length or 0) > 0
         )
         for cheese_type, button in [
@@ -1061,13 +1089,21 @@ class SimulatorApp:
                 child.destroy()
             if self.state.pending_chapter_choices:
                 self.pending_choices_frame.grid()
+                locked = self.state.pending_choices_locked
                 for choice in self.state.pending_chapter_choices:
                     choice_text = f"Length {choice['length']} - Genre {choice['genre']}"
                     ttk.Button(
                         self.pending_choices_container,
                         text=choice_text,
                         command=lambda c=choice: self._choose_next_chapter(c),
+                        state="disabled" if locked else "normal",
                     ).pack(fill="x", pady=2)
+                if locked:
+                    ttk.Label(
+                        self.pending_choices_container,
+                        text="Complete the current chapter before selecting.",
+                        foreground="#666",
+                    ).pack(fill="x", pady=(4, 0))
             else:
                 self.pending_choices_frame.grid_remove()
 
@@ -1270,13 +1306,19 @@ class SimulatorApp:
         state.run_fantasy_available = fantasy_available
         state.postscript_extended = False
         state.run_mallets_spent = 0
+        state.pending_choices_locked = False
 
     def _begin_chapter(self, state: GameState, chapter_number: int, length: int, genre: str):
         state.chapter_position = chapter_number
         state.current_chapter_length = length
         state.current_chapter_genre = genre
         state.current_chapter_progress = 0
-        state.pending_chapter_choices = []
+        if chapter_number <= TOTAL_CHAPTERS - 1:
+            state.pending_chapter_choices = self._generate_next_chapter_choices(state)
+            state.pending_choices_locked = True
+        else:
+            state.pending_chapter_choices = []
+            state.pending_choices_locked = False
         if chapter_number == 7:
             self._log(f"Entered Postscript with length {state.postscript_length}")
         else:
@@ -1294,7 +1336,11 @@ class SimulatorApp:
         if self.state.chapter_position == 0:
             messagebox.showinfo("Not started", "Enter the first chapter before hunting.")
             return
-        if self.state.pending_chapter_choices:
+        if (
+            self.state.pending_chapter_choices
+            and not self.state.pending_choices_locked
+            and self.state.chapter_position <= TOTAL_CHAPTERS
+        ):
             messagebox.showinfo("Select chapter", "Choose the next chapter before continuing.")
             return
         if cheese_type is None:
@@ -1355,7 +1401,9 @@ class SimulatorApp:
         state.current_chapter_length = None
         state.current_chapter_genre = None
         state.current_chapter_progress = 0
-        state.pending_chapter_choices = self._generate_next_chapter_choices(state)
+        state.pending_choices_locked = False
+        if not state.pending_chapter_choices:
+            state.pending_chapter_choices = self._generate_next_chapter_choices(state)
         self._log_chapter_choices("Available next chapters", state.pending_chapter_choices)
 
     def _generate_next_chapter_choices(self, state: GameState) -> list[dict]:
@@ -1377,6 +1425,9 @@ class SimulatorApp:
         new_state = self.state.clone()
         if not new_state.pending_chapter_choices:
             return
+        if new_state.pending_choices_locked:
+            messagebox.showinfo("Chapter in progress", "Finish the current chapter before selecting the next one.")
+            return
         next_chapter_number = min(new_state.chapter_position + 1, TOTAL_CHAPTERS)
         # If chapter_position was 0 (should not happen), start at 1
         if next_chapter_number <= new_state.chapter_position:
@@ -1392,6 +1443,7 @@ class SimulatorApp:
         state.current_chapter_progress = 0
         state.pending_chapter_choices = []
         state.postscript_extended = False
+        state.pending_choices_locked = False
         self._play_sound("completion")
         self._log("Postscript started.", tag="info_postscript")
 
@@ -1494,6 +1546,24 @@ class SimulatorApp:
             command()
 
         return ttk.Button(parent, text=text, command=wrapped, **kwargs)
+
+    def _export_log(self):
+        if not self.log_text:
+            return
+        content = self.log_text.get("1.0", "end-1c")
+        path = filedialog.asksaveasfilename(
+            title="Export Log",
+            defaultextension=".txt",
+            filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")],
+        )
+        if not path:
+            return
+        try:
+            with open(path, "w", encoding="utf-8") as fh:
+                fh.write(content)
+            messagebox.showinfo("Export Log", f"Log exported to {path}")
+        except OSError as exc:
+            messagebox.showerror("Export Log", f"Failed to export log:\n{exc}")
 
     def _cc_multiplier(self) -> float:
         return 2.0
