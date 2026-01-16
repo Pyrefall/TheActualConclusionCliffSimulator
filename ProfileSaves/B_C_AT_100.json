@@ -1,0 +1,90 @@
+{
+  "resources": {
+    "mallets": 303.9999999999997,
+    "T1 cheese": 423.0,
+    "T2 cheese": 345.0,
+    "T3 cheese": 40.0,
+    "Thread": 3.3199999998905696,
+    "Machinery": 54.199999999999704,
+    "Diamond": 113.0
+  },
+  "consumables": {
+    "CC": 562.0,
+    "hooks": 2060.0,
+    "Gold": 484528.0,
+    "ME": 4421.0
+  },
+  "notoriety": {
+    "Romance": 129,
+    "Adventure": 139,
+    "Comedy": 85,
+    "Tragedy": 130,
+    "Suspense": 140
+  },
+  "enemy_drops": {
+    "T1 mouse": {
+      "Thread": 1.54,
+      "Gold": 7500.0
+    },
+    "T2 mouse": {
+      "Machinery": 2.44,
+      "Gold": 16500.0
+    },
+    "T3 mouse": {
+      "Gold": 25000.0
+    },
+    "Common Weaver - With T1 Cheese": {
+      "Gold": 25000.0,
+      "mallets": 0.7,
+      "Thread": 3.14
+    },
+    "Common Weaver - With T2 Cheese": {
+      "Gold": 25000.0,
+      "mallets": 0.7,
+      "Machinery": 2.94
+    },
+    "Common Weaver - With T3 Cheese": {
+      "Gold": 25000.0,
+      "mallets": 0.7
+    },
+    "Ultimate MythWeaver - With T1 Cheese": {
+      "Gold": 225000.0,
+      "Diamond": 1.0,
+      "mallets": 2.3,
+      "Thread": 3.14
+    },
+    "Ultimate MythWeaver - With T2 Cheese": {
+      "Gold": 225000.0,
+      "Diamond": 1.0,
+      "mallets": 2.3,
+      "Machinery": 2.94
+    },
+    "Ultimate MythWeaver - With T3 Cheese": {
+      "Gold": 225000.0,
+      "Diamond": 1.0,
+      "mallets": 2.3
+    }
+  },
+  "genre_pages": {
+    "Romance": 0,
+    "Adventure": 0,
+    "Comedy": 0,
+    "Tragedy": 0,
+    "Suspense": 0,
+    "Fantasy": 3500
+  },
+  "total_hunts": 3440,
+  "current_run_hunts": 143,
+  "chapter_position": 7,
+  "current_chapter_length": null,
+  "current_chapter_genre": null,
+  "current_chapter_progress": 3,
+  "postscript_length": 13,
+  "pending_chapter_choices": [],
+  "run_fantasy_available": true,
+  "postscript_extended": true,
+  "run_mallets_spent": 36,
+  "total_mallets_spent": 552,
+  "pending_choices_locked": false,
+  "total_diamonds_gain": 100.0
+}
