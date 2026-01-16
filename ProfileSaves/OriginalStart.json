@@ -1,0 +1,90 @@
+{
+  "resources": {
+    "mallets": 60.0,
+    "T1 cheese": 3254.0,
+    "T2 cheese": 23.0,
+    "T3 cheese": 1.0,
+    "Thread": 24.0,
+    "Machinery": 2.0,
+    "Diamond": 13.0
+  },
+  "consumables": {
+    "CC": 4002.0,
+    "hooks": 21920.0,
+    "Gold": 322028.0,
+    "ME": 4842.0
+  },
+  "notoriety": {
+    "Romance": 0,
+    "Adventure": 0,
+    "Comedy": 0,
+    "Tragedy": 0,
+    "Suspense": 0
+  },
+  "enemy_drops": {
+    "T1 mouse": {
+      "Thread": 1.54,
+      "Gold": 7500.0
+    },
+    "T2 mouse": {
+      "Machinery": 2.44,
+      "Gold": 16500.0
+    },
+    "T3 mouse": {
+      "Gold": 25000.0
+    },
+    "Common Weaver - With T1 Cheese": {
+      "Gold": 25000.0,
+      "mallets": 0.7,
+      "Thread": 3.14
+    },
+    "Common Weaver - With T2 Cheese": {
+      "Gold": 25000.0,
+      "mallets": 0.7,
+      "Machinery": 2.94
+    },
+    "Common Weaver - With T3 Cheese": {
+      "Gold": 25000.0,
+      "mallets": 0.7
+    },
+    "Ultimate MythWeaver - With T1 Cheese": {
+      "Gold": 225000.0,
+      "Diamond": 1.0,
+      "mallets": 2.3,
+      "Thread": 3.14
+    },
+    "Ultimate MythWeaver - With T2 Cheese": {
+      "Gold": 225000.0,
+      "Diamond": 1.0,
+      "mallets": 2.3,
+      "Machinery": 2.94
+    },
+    "Ultimate MythWeaver - With T3 Cheese": {
+      "Gold": 225000.0,
+      "Diamond": 1.0,
+      "mallets": 2.3
+    }
+  },
+  "genre_pages": {
+    "Romance": 0,
+    "Adventure": 0,
+    "Comedy": 0,
+    "Tragedy": 0,
+    "Suspense": 0,
+    "Fantasy": 0
+  },
+  "total_hunts": 0,
+  "current_run_hunts": 0,
+  "chapter_position": 0,
+  "current_chapter_length": null,
+  "current_chapter_genre": null,
+  "current_chapter_progress": 0,
+  "postscript_length": 10,
+  "pending_chapter_choices": [],
+  "run_fantasy_available": false,
+  "postscript_extended": false,
+  "run_mallets_spent": 0,
+  "total_mallets_spent": 0,
+  "pending_choices_locked": false,
+  "total_diamonds_gain": 0.0
+}

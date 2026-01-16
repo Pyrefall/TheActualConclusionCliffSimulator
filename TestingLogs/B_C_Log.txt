@@ -1,0 +1,2 @@
+Entered Chapter 1: length 20, genre Suspense
+Run started with random selection: length 20, genre Suspense
