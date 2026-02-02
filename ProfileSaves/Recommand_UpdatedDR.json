@@ -23,47 +23,47 @@
   },
   "enemy_drops": {
     "T1 mouse": {
-      "Thread": 1.55,
+      "Thread": 1.52,
       "Gold": 7500.0
     },
     "T2 mouse": {
-      "Machinery": 1.1,
+      "Machinery": 1.2,
       "Gold": 16500.0
     },
     "T3 mouse": {
       "Gold": 25000.0,
-      "mallets": 0.35
+      "mallets": 0.7
     },
     "Common Weaver - With T1 Cheese": {
       "Gold": 25000.0,
-      "mallets": 0.7,
-      "Thread": 2.5
+      "mallets": 0.58,
+      "Thread": 3.0
     },
     "Common Weaver - With T2 Cheese": {
       "Gold": 25000.0,
-      "mallets": 0.7,
+      "mallets": 0.64,
       "Machinery": 3.0
     },
     "Common Weaver - With T3 Cheese": {
       "Gold": 25000.0,
-      "mallets": 0.7
+      "mallets": 0.64
     },
     "Ultimate MythWeaver - With T1 Cheese": {
       "Gold": 225000.0,
-      "Diamond": 0.9,
-      "mallets": 2.0,
-      "Thread": 1.54
+      "Diamond": 1.0,
+      "mallets": 2.5,
+      "Thread": 3.0
     },
     "Ultimate MythWeaver - With T2 Cheese": {
       "Gold": 225000.0,
-      "Diamond": 0.9,
-      "mallets": 2.0,
-      "Machinery": 3.2
+      "Diamond": 1.0,
+      "mallets": 2.5,
+      "Machinery": 3.0
     },
     "Ultimate MythWeaver - With T3 Cheese": {
       "Gold": 225000.0,
-      "Diamond": 0.9,
-      "mallets": 2.0
+      "Diamond": 1.0,
+      "mallets": 2.5
     }
   },
   "genre_pages": {
